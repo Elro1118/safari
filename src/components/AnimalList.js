@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 class AnimalList extends Component {
   state = {
@@ -33,6 +34,9 @@ class AnimalList extends Component {
   render() {
     return (
       <>
+        <Link to={`/`}>
+          <h4>Home</h4>
+        </Link>
         <h1>List of Animals that User Has Seen</h1>
         <table>
           <thead>

@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import AnimalList from './components/AnimalList'
 import AnimalListPlace from './components/AnimalListPlace'
 import RemoveAnimalsPlace from './components/RemoveAnimalsPlace'
+import ThreeAnimals from './components/ThreeAnimals'
 
 class App extends Component {
   render() {
@@ -23,6 +24,7 @@ class App extends Component {
               path="/RemoveAnimalsForPlace"
               component={RemoveAnimalsPlace}
             />
+            <Route exact path="/ThreeAnimalsTotal" component={ThreeAnimals} />
           </Switch>
         </Router>
       </>

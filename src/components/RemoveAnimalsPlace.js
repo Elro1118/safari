@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
+
 class RemoveAnimalsPlace extends Component {
   state = {
     places: [],
@@ -21,19 +23,21 @@ class RemoveAnimalsPlace extends Component {
   }
 
   displayAnimalsPlace = event => {
-    let urlAxios = ''
     this.setState({ locationSelected: event.target.value })
 
-    if (event.target.value === 'All') {
-      urlAxios = `https://localhost:5001/api/Animals`
+    if (event.target.value !== ' ') {
+      axios
+        .get(`https://localhost:5001/api/Animals/${event.target.value}`)
+        .then(resp => {
+          this.setState({
+            animals: resp.data
+          })
+        })
     } else {
-      urlAxios = `https://localhost:5001/api/Animals/${event.target.value}`
-    }
-    axios.get(urlAxios).then(resp => {
       this.setState({
-        animals: resp.data
+        animals: []
       })
-    })
+    }
   }
 
   handleSubmit = event => {
@@ -57,13 +61,19 @@ class RemoveAnimalsPlace extends Component {
   render() {
     return (
       <>
+        <Link to={`/`}>
+          <h4>Home</h4>
+        </Link>
         <form onSubmit={this.handleSubmit}>
           <label>
-            Pick your location to remove
+            Pick your location to remove{' '}
             <select
               value={this.state.locationSelected}
               onChange={this.displayAnimalsPlace}
             >
+              <option defaultValue value=" ">
+                {' '}
+              </option>
               {this.state.places.map((m, i) => {
                 return (
                   <option key={i} value={m}>
@@ -74,34 +84,33 @@ class RemoveAnimalsPlace extends Component {
             </select>
           </label>
           <input type="submit" value="Submit" />
-
-          <table>
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Species</th>
-                <th>Count of Times Seen</th>
-                <th>Location of LastSeen</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.animals ? (
-                this.state.animals.map((m, i) => {
-                  return (
-                    <tr key={i}>
-                      <td>{m.id}</td>
-                      <td>{m.species}</td>
-                      <td>{m.countOfTimesSeen}</td>
-                      <td>{m.locationOfLastSeen}</td>
-                    </tr>
-                  )
-                })
-              ) : (
-                <></>
-              )}
-            </tbody>
-          </table>
         </form>
+        <table>
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Species</th>
+              <th>Count of Times Seen</th>
+              <th>Location of LastSeen</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.animals && this.state.animals.length > 0 ? (
+              this.state.animals.map((m, i) => {
+                return (
+                  <tr key={i}>
+                    <td>{m.id}</td>
+                    <td>{m.species}</td>
+                    <td>{m.countOfTimesSeen}</td>
+                    <td>{m.locationOfLastSeen}</td>
+                  </tr>
+                )
+              })
+            ) : (
+              <></>
+            )}
+          </tbody>
+        </table>
       </>
     )
   }
